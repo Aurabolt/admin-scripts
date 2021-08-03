@@ -26,6 +26,13 @@ if [[ $APTRESULT -gt 1 ]]; then
   echo "apt updates found! Updating..." | tee $LOGFILE
 
   if [[ ! -z $APPDIR ]]; then
+    # Make sure crontab auto starts "php artisan up" after reboots
+    CRONRESULT=$(sudo crontab -l | grep -i "php artisan up")
+    if [[ -z $CRONRESULT ]]; then
+      echo "Installing 'php artisan up' after reboots to crontab..." | tee $LOGFILE
+      (crontab -l ; echo "@reboot cd $APPDIR && php artisan up") | crontab -
+    fi
+
     echo "cd to $APPDIR, appname is $APPNAME"
     cd $APPDIR
     php artisan down --retry=60 --redirect=/
@@ -38,6 +45,15 @@ if [[ $APTRESULT -gt 1 ]]; then
 
   echo "Doing apt updates..." | tee $LOGFILE
   sudo apt upgrade -y
+
+  # Reboot if needed
+  #reboot-if-needed.sh
+
+  if [[ ! -z $APPDIR ]]; then
+    echo "cd to $APPDIR, appname is $APPNAME"
+    cd $APPDIR
+    php artisan up
+  fi
 else
   echo "No apt updates found." | tee $LOGFILE
 fi
