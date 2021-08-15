@@ -1,6 +1,7 @@
 #!/bin/bash
 SCRIPTNAME=`basename "$0"`
 LOGFILE=/root/$SCRIPTNAME.log
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
 if [ -d "/var/www" ]; then
   APPNAME=`ls /var/www | grep -v html | head -n 1`
@@ -56,7 +57,7 @@ if [[ $APTRESULT -gt 1 ]]; then
 
   # Reboot if needed
   if [[ "$1" == "reboot-if-needed" ]]; then
-    reboot-if-needed.sh
+    $SCRIPT_DIR/reboot-if-needed.sh
   fi
 
   if [[ ! -z $APPDIR ]]; then
