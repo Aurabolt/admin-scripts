@@ -1,8 +1,6 @@
 #!/bin/bash
 SCRIPTNAME=`basename "$0"`
 LOGFILE=/root/$SCRIPTNAME.log
-#APPNAME=/nothing
-#APPDIR=/nothing
 
 if [ -d "/var/www" ]; then
   APPNAME=`ls /var/www | grep -v html | head -n 1`
@@ -17,14 +15,14 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
-echo $(date) | tee $LOGFILE
+echo $(date)
 sudo apt update
 
 if [[ ! -z $APPDIR ]]; then
   # Make sure crontab auto starts "php artisan up" after reboots
   CRONRESULT=$(sudo crontab -l | grep -i "php artisan up")
   if [[ -z $CRONRESULT ]]; then
-    echo "Installing 'php artisan up' after reboots to crontab..." | tee $LOGFILE
+    echo "Installing 'php artisan up' after reboots to crontab..."
     (crontab -l ; echo "@reboot cd $APPDIR && php artisan up") | crontab -
   fi
 fi
@@ -32,7 +30,7 @@ fi
 APTRESULT=$(sudo apt list --upgradeable | wc -l)
 if [[ $APTRESULT -gt 1 ]]; then
   echo "-----------------------------"
-  echo "apt updates found! Updating..." | tee $LOGFILE
+  echo "apt updates found! Updating..."
 
   if [[ ! -z $APPDIR ]]; then
     echo "cd to $APPDIR, appname is $APPNAME"
@@ -45,11 +43,21 @@ if [[ $APTRESULT -gt 1 ]]; then
     $APPDIR/backup-app.sh
   fi
 
-  echo "Doing apt updates..." | tee $LOGFILE
+  echo "Doing apt updates..."
   sudo apt upgrade -y
 
+  # Check if upgrade failed
+  if [ $? -eq 0 ]; then
+    echo "Upgrades finished OK."
+  else
+    echo "ERROR: Upgrades failed! Quitting."
+    exit 2
+  fi
+
   # Reboot if needed
-  #reboot-if-needed.sh
+  if [[ "$1" == "reboot-if-needed" ]]; then
+    reboot-if-needed.sh
+  fi
 
   if [[ ! -z $APPDIR ]]; then
     echo "cd to $APPDIR, appname is $APPNAME"
@@ -57,5 +65,5 @@ if [[ $APTRESULT -gt 1 ]]; then
     php artisan up
   fi
 else
-  echo "No apt updates found." | tee $LOGFILE
+  echo "No apt updates found."
 fi
