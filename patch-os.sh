@@ -63,7 +63,7 @@ if [[ $APTRESULT -gt 1 ]]; then
   if [[ ! -z $APPDIR ]]; then
     echo "cd to $APPDIR, appname is $APPNAME"
     cd $APPDIR
-    $APPDIR/restart-app.sh
+    $APPDIR/restart-app.sh --nolog true
     php artisan up
   fi
 else
