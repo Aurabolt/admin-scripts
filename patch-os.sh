@@ -16,6 +16,7 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
+echo
 echo $(date)
 sudo apt update
 
@@ -26,6 +27,14 @@ if [[ ! -z $APPDIR ]]; then
     echo "Installing 'php artisan up' after reboots to crontab..."
     (crontab -l ; echo "@reboot cd $APPDIR && php artisan up") | crontab -
   fi
+fi
+
+# Update pihole
+PIHOLE=$(which pihole)
+
+if [ $? -eq 0 ]; then
+  echo "Updating pihole..."
+  pihole -up
 fi
 
 APTRESULT=$(sudo apt list --upgradeable | wc -l)
