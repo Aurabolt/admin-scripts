@@ -18,6 +18,14 @@ fi
 
 echo
 echo $(date)
+
+# Make sure crontab auto starts "php artisan up" after reboots
+CRONRESULT=$(sudo crontab -l | grep -i "git pull")
+if [[ -z $CRONRESULT ]]; then
+  echo "Installing 'git pull' for /root/admin-scripts to crontab..."
+  (crontab -l ; echo "0 * * * * cd /root/admin-scripts; git pull") | crontab -
+fi
+
 sudo apt update
 
 if [[ ! -z $APPDIR ]]; then
