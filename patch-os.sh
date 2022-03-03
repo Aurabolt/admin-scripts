@@ -40,7 +40,8 @@ fi
 # Update pihole
 PIHOLE=$(which pihole)
 
-if [ $? -eq 0 ]; then
+# if not null
+if [ ! -z $PIHOLE ]; then
   echo "Updating pihole..."
   pihole -up
 fi
