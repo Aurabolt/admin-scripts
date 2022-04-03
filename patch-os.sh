@@ -11,7 +11,7 @@ if [ -d "/var/www" ]; then
   fi
 fi
 
-if [ "$EUID" -ne 0 ]; then 
+if [ "$EUID" -ne 0 ]; then
   echo "$SCRIPTNAME must run as root"
   exit
 fi
@@ -37,13 +37,12 @@ if [[ ! -z $APPDIR ]]; then
   fi
 fi
 
-# Update pihole
-PIHOLE=$(which pihole)
+# Update pihole if pihole binary exists
+PIHOLE=/usr/local/bin/pihole
 
-# if not null
-if [ ! -z $PIHOLE ]; then
+if [ -f $PIHOLE ]; then
   echo "Updating pihole..."
-  pihole -up
+  $PIHOLE -up
 fi
 
 APTRESULT=$(sudo apt list --upgradeable | wc -l)
@@ -56,7 +55,7 @@ if [[ $APTRESULT -gt 1 ]]; then
     cd $APPDIR
     php artisan down --retry=60 --redirect=/
   fi
-  
+
   # Backup
   if [ -f $APPDIR/backup-app.sh ]; then
     $APPDIR/backup-app.sh
