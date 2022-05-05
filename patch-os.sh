@@ -62,7 +62,9 @@ if [[ $APTRESULT -gt 1 ]]; then
   fi
 
   echo "Doing apt updates..."
-  sudo apt upgrade -y
+  export DEBIAN_FRONTEND=noninteractive
+  yes '' | sudo apt -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade
+  sudo apt autoremove -y
 
   # Check if upgrade failed
   if [ $? -eq 0 ]; then
