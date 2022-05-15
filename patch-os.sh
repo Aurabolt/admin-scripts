@@ -75,14 +75,6 @@ if [[ $APTRESULT -gt 1 ]]; then
   yes '' | sudo apt -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade
   sudo apt autoremove -y
 
-  # Check if upgrade failed
-  if [ $? -eq 0 ]; then
-    echo "Upgrades finished OK."
-  else
-    echo "ERROR: Upgrades failed! Quitting."
-    exit 2
-  fi
-
   # Reboot if needed
   if [[ "$1" == "reboot-if-needed" ]]; then
     $SCRIPT_DIR/reboot-if-needed.sh
