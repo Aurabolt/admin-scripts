@@ -71,7 +71,7 @@ if [[ $APTRESULT -gt 1 ]]; then
   fi
 
   # Upgrade
-  echo "Doing apt-get upgrades..."
+  echo "Doing apt upgrades..."
   export DEBIAN_FRONTEND=noninteractive
   sudo -E apt -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade
 
