@@ -70,9 +70,13 @@ if [[ $APTRESULT -gt 1 ]]; then
     $APPDIR/backup-app.sh
   fi
 
-  echo "Doing apt updates..."
+  # Upgrade
+  echo "Doing apt upgrades..."
   export DEBIAN_FRONTEND=noninteractive
-  yes '' | sudo apt -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade
+  sudo -E apt -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade
+
+  # Cleanup
+  sudo apt autoclean -y
   sudo apt autoremove -y
 
   # Reboot if needed
