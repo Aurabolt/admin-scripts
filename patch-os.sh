@@ -6,8 +6,8 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 if [ -d "/var/www" ]; then
   APPNAME=`ls /var/www | grep -v html | head -n 1`
   if [[ ! -z "$APPNAME" ]]; then
-    echo "appname is $APPNAME, appdir is $APPDIR"
     APPDIR=/var/www/$APPNAME
+    echo "appname is $APPNAME, appdir is $APPDIR"
   fi
 fi
 
