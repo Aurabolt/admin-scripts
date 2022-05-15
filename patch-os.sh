@@ -26,6 +26,15 @@ if [[ -z $CRONRESULT ]]; then
   (crontab -l ; echo "0 * * * * cd /root/admin-scripts; git pull") | crontab -
 fi
 
+# Kill currently running apt upgrade processes
+# https://stackoverflow.com/a/3510850
+APTRUNNINGRESULT=$(ps aux | grep 'apt upgrade' | grep -v grep)
+if [[ ! -z $APTRUNNINGRESULT ]]; then
+  echo "Killing all 'apt upgrade' processes..."
+  kill $(ps aux | grep 'apt upgrade' | grep -v grep | awk '{print $2}')
+fi
+
+# apt update
 sudo apt update
 
 if [[ ! -z $APPDIR ]]; then
