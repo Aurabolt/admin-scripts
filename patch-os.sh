@@ -75,9 +75,9 @@ if [[ $APTRESULT -gt 1 ]]; then
   export DEBIAN_FRONTEND=noninteractive
   sudo -E apt -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade
 
-  # Cleanup
-  sudo apt autoclean -y
-  sudo apt autoremove -y
+  # Cleanup (Commented out 1/9/2023 for breaking php8.1-redis)
+  # sudo apt autoclean -y
+  # sudo apt autoremove -y
 
   # Reboot if needed
   if [[ "$1" == "reboot-if-needed" ]]; then
