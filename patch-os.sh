@@ -73,7 +73,8 @@ if [[ $APTRESULT -gt 1 ]]; then
   # Upgrade
   echo "Doing apt upgrades..."
   export DEBIAN_FRONTEND=noninteractive
-  sudo -E apt -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade
+  #sudo -E apt -y -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade
+  sudo -E apt upgrade -y
 
   # Cleanup (Commented out 1/9/2023 for breaking php8.1-redis)
   # sudo apt autoclean -y
